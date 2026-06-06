@@ -131,13 +131,25 @@ def main():
         except Exception as e:
             print(f"  Image 2 generation failed: {e}")
 
-    print("\n[3/4] Posting to Blogger...")
+    print("\n[3/4] Posting to Blogger with SEO...")
     body_html = body_to_html(body)
 
     from scripts.post_to_blogger import post_article_with_images
 
     labels = ["Islamic Guide", category]
-    result = post_article_with_images(title, body_html, image_paths, alt_texts, labels=labels)
+    result = post_article_with_images(
+        title=title,
+        body=body_html,
+        image_paths=image_paths,
+        alt_texts=alt_texts,
+        labels=labels,
+        body_text=body,
+        focus_keyword=article.get("focus_keyword", ""),
+        meta_description=article.get("meta_description", ""),
+        faq_text=article.get("faq", ""),
+        category=category,
+        word_count=word_count,
+    )
 
     post_id = result.get("post_id", "")
     post_url = result.get("post_url", "")

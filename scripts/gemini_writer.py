@@ -35,14 +35,25 @@ def generate_article(subtopic: str) -> dict:
     lines = raw.split("\n")
     title = lines[0].strip().strip("#").strip()
 
-    images_section_marker = "----------------------------"
-    images_start = raw.find(images_section_marker)
+    seo_marker = "----------------------------"
+    images_marker = "UPDATED IMAGES REQUIREMENTS"
+    seo_section_marker = "SEO METADATA"
+
+    images_start = raw.find(images_marker)
+    seo_start = raw.find(seo_section_marker)
+
     if images_start != -1:
-        body = raw[len(lines[0]) : images_start].strip()
+        raw_body = raw[len(lines[0]) : images_start].strip()
         images_section = raw[images_start:]
     else:
-        body = raw[len(lines[0]) :].strip()
+        raw_body = raw[len(lines[0]) :].strip()
         images_section = ""
+
+    body = raw_body
+    if seo_start != -1 and images_start != -1:
+        body = raw[len(lines[0]) : images_start].strip()
+    elif seo_start != -1:
+        body = raw[len(lines[0]) : seo_start].strip()
 
     image_prompt = ""
     alt_text = ""
@@ -64,6 +75,31 @@ def generate_article(subtopic: str) -> dict:
 
     word_count = len(body.split())
 
+    focus_keyword = ""
+    meta_description = ""
+    slug = ""
+    faq = ""
+
+    seo_section = ""
+    if seo_start != -1:
+        seo_section = raw[seo_start:]
+
+    kw_match = re.search(r"FOCUS KEYWORD:\s*(.+)", seo_section)
+    if kw_match:
+        focus_keyword = kw_match.group(1).strip()
+
+    md_match = re.search(r"META DESCRIPTION:\s*(.+)", seo_section)
+    if md_match:
+        meta_description = md_match.group(1).strip()
+
+    slug_match = re.search(r"SLUG:\s*(.+)", seo_section)
+    if slug_match:
+        slug = slug_match.group(1).strip()
+
+    faq_match = re.search(r"FAQ:\s*(.+)", seo_section, re.DOTALL)
+    if faq_match:
+        faq = faq_match.group(1).strip()
+
     if not image_prompt:
         image_prompt = (
             f"Modern Islamic blog featured image about {subtopic}, "
@@ -80,6 +116,10 @@ def generate_article(subtopic: str) -> dict:
         "body": body,
         "image_prompt": image_prompt,
         "alt_text": alt_text,
+        "focus_keyword": focus_keyword,
+        "meta_description": meta_description,
+        "slug": slug,
+        "faq": faq,
         "word_count": word_count,
         "raw": raw,
     }

@@ -103,4 +103,12 @@ Before finishing, reread the article. If any sentence sounds like marketing copy
 OUTPUT FORMAT:
 Return the title on the first line.
 Then the full article body below it.
-Nothing else. No notes, no labels, no explanation.
+Then add this SEO section at the end:
+
+----------------------------
+SEO METADATA
+----------------------------
+FOCUS KEYWORD: [one main keyword for this article]
+META DESCRIPTION: [one sentence under 160 characters]
+SLUG: [url-friendly version of title, hyphens only, no special chars]
+FAQ: [only if article answers clear questions, write Q: ... A: ... | Q: ... A: ... | leave empty if not applicable]
