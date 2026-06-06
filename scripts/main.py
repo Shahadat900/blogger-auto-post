@@ -113,8 +113,7 @@ def main():
     print(f"  Title: {title}")
     print(f"  Words: {word_count}")
 
-    num_images = 2 if word_count >= 1000 else 1
-    print(f"\n[2/4] Generating {num_images} image(s) with Gemini...")
+    print(f"\n[2/4] Generating featured image...")
 
     os.makedirs(TEMP_IMAGES_DIR, exist_ok=True)
 
@@ -124,21 +123,7 @@ def main():
     path1, alt1 = generate_and_save(image_prompt, alt_text, index=1)
     image_paths.append(path1)
     alt_texts.append(alt1)
-    print(f"  Image 1 saved: {path1}")
-
-    if num_images >= 2:
-        second_prompt = (
-            f"{image_prompt}, different composition, alternate angle, "
-            f"complementary color palette, matching style"
-        )
-        second_alt = f"{alt_text} - complementary view"
-        try:
-            path2, alt2 = generate_and_save(second_prompt, second_alt, index=2)
-            image_paths.append(path2)
-            alt_texts.append(alt2)
-            print(f"  Image 2 saved: {path2}")
-        except Exception as e:
-            print(f"  Image 2 generation failed: {e}")
+    print(f"  Featured image saved: {path1}")
 
     print("\n[3/4] Posting to Blogger with SEO...")
     body_html = body_to_html(body)

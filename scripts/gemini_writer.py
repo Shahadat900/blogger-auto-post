@@ -110,42 +110,29 @@ def generate_article(subtopic: str) -> dict:
     title = lines[0].strip().strip("#").strip()
 
     seo_marker = "----------------------------"
-    images_marker = "UPDATED IMAGES REQUIREMENTS"
     seo_section_marker = "SEO METADATA"
+    image_prompt_marker = "Image Prompt:"
 
-    images_start = raw.find(images_marker)
     seo_start = raw.find(seo_section_marker)
 
-    if images_start != -1:
-        raw_body = raw[len(lines[0]) : images_start].strip()
-        images_section = raw[images_start:]
-    else:
-        raw_body = raw[len(lines[0]) :].strip()
-        images_section = ""
-
-    body = raw_body
-    if seo_start != -1 and images_start != -1:
-        body = raw[len(lines[0]) : images_start].strip()
+    image_prompt_start = raw.find(image_prompt_marker)
+    if image_prompt_start != -1:
+        body = raw[len(lines[0]) : image_prompt_start].strip()
     elif seo_start != -1:
         body = raw[len(lines[0]) : seo_start].strip()
+    else:
+        body = raw[len(lines[0]) :].strip()
 
     image_prompt = ""
     alt_text = ""
 
-    if images_section:
-        prompt_match = re.search(
-            r"IMAGE PROMPT:\s*(.+?)(?=ALT TEXT:|$)",
-            images_section,
-            re.DOTALL,
-        )
-        if prompt_match:
-            image_prompt = prompt_match.group(1).strip()
-
-        alt_match = re.search(
-            r"ALT TEXT:\s*(.+?)(?=\n\n|\Z)", images_section, re.DOTALL
-        )
-        if alt_match:
-            alt_text = alt_match.group(1).strip()
+    if image_prompt_start != -1:
+        prompt_text = raw[image_prompt_start + len(image_prompt_marker):]
+        next_sep = prompt_text.find(seo_marker)
+        if next_sep != -1:
+            image_prompt = prompt_text[:next_sep].strip()
+        else:
+            image_prompt = prompt_text.strip()
 
     word_count = len(body.split())
 

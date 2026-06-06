@@ -1,104 +1,41 @@
-You are an experienced human blogger writing for a real audience. Write a complete, original blog article about the following topic:
+Write a blog article about this topic:
 
 TOPIC: {subtopic}
 
-Treat the topic above as the niche. Pick one specific, fresh angle within that niche and write a focused article on it. Do not write a generic overview every time. Each article must explore a different sub-angle, question, trend, or practical situation inside the niche so articles never feel repetitive.
+Pick one specific, fresh angle within that topic. Every article should feel different — explore a real question, struggle, or practical situation. Do not write the same overview each time.
 
-TITLE REQUIREMENTS:
-Create one unique, specific title. It must be search friendly and read like a real blog headline a person would click. Avoid generic patterns. The title should target a clear search intent and include words people actually type into Google. Do not reuse common phrasings. Make it feel current and specific to the angle you chose.
+TITLE:
+Create a title that sounds like something a real person would click on. Make it specific, useful, and natural. Avoid clickbait. Think of titles that answer a question someone actually has.
 
-ARTICLE LENGTH:
-Minimum 800 words, maximum 1500 words. Stay inside this range.
+LENGTH: 800–1500 words.
 
-WRITING STYLE RULES:
-Write the way a knowledgeable person talks to a friend who wants real answers. Use short and medium sentences. Vary sentence length naturally. Use simple, everyday English. Be direct and practical. Share concrete details, examples, and specifics instead of vague statements. It is fine to have opinions and a clear point of view.
+WRITING STYLE:
+Write like you're talking to a friend who genuinely wants to know. Use "you" a lot. Be warm and direct. Use short sentences mixed with medium ones. Share real examples and specific advice. Don't be vague. Don't sound like a textbook.
 
 STRUCTURE:
-Open with a hook that gets straight to the point, no long throat clearing. Use clear section headings that match what readers are searching for. Keep paragraphs short, two to four sentences each. Use bullet points only where they genuinely help. End with a short, useful closing that gives the reader a next step or a final practical thought. Do not write a heavy summary that just repeats everything.
+- Start with a relatable hook. Address the reader's struggle or question directly. Something like "We've all been there" or "Let's be honest."
+- Use short paragraphs (2–4 sentences each).
+- Use simple headings that tell the reader what they'll learn.
+- Include bullet points only when listing concrete items.
+- End with a short, encouraging closing that leaves the reader with something to act on.
+- Do not write a long summary that repeats everything.
 
 IMAGE PROMPT RULES:
-The image prompt must match the article topic exactly, not a generic Islamic image.
-Do not include text overlays, watermarks, logos, captions, or typography inside the image.
-Make the image visually attractive for blog readers and social media sharing.
-Use natural lighting and realistic details unless the article specifically needs an illustration style.
-Avoid unrealistic fantasy elements.
-After the full article, add this section exactly:
-
+- The image prompt must describe a realistic photo scene related to the topic.
+- No text overlays, watermarks, logos, captions, or typography inside the image.
+- Use natural lighting and realistic details.
+- Write the image prompt as a single paragraph describing a beautiful, natural scene.
+- After the full article, add this line exactly:
 ----------------------------
-UPDATED IMAGES REQUIREMENTS
-----------------------------
-
-- Automatically generate a modern featured image style for the blog post inspired by premium Islamic guide thumbnails and Pinterest-style blog covers.
-
-- The image design should follow this layout structure:
-
-  1. TOP LEFT CATEGORY LABEL
-     - Small rounded badge/tag
-     - Example text: "SURAH MEANING", "ISLAMIC GUIDE", "DAILY DUA", "PRAYER GUIDE"
-     - Use elegant uppercase typography
-
-  2. MAIN BLOG TITLE
-     - Large bold elegant serif or modern Islamic-style font
-     - Positioned center-left
-     - Clean spacing and highly readable
-     - Example style: luxury editorial typography
-
-  3. WEBSITE OR BRAND NAME
-     - Smaller text below the title
-     - Example: "— Islamic Guide"
-     - Minimal and elegant design
-
-  4. DECORATIVE ELEMENTS
-     - Add 3 small dots or geometric Islamic-style decorations on the bottom-right corner
-     - Optional subtle Islamic geometric patterns or glow accents
-
-  5. BACKGROUND STYLE
-     - Use smooth premium gradient backgrounds
-     - Blend 2 harmonious colors (example: dark green + emerald, navy + teal, black + gold, dark blue + purple)
-     - Include soft lighting, blur, depth, and abstract layered shapes
-     - Minimalist, modern, luxurious, and visually calming
-
-  6. VISUAL STYLE
-     - Clean Islamic aesthetic
-     - Modern blog banner / social media cover style
-     - No humans unless specifically requested
-     - No excessive ornaments or clutter
-     - Professional UI/UX inspired composition
-
-- For every generated image include:
-
-  - IMAGE PROMPT
-    (Detailed AI image generation prompt matching the section or blog topic)
-
-  - ALT TEXT
-    (SEO-friendly descriptive accessibility text)
-
-- Example image prompt style:
-
-  "Modern Islamic blog featured image with elegant green and dark emerald gradient background, minimalist luxury design, soft abstract layered shapes, small rounded category badge on top-left saying 'SURAH MEANING', large serif typography title in white, subtle Islamic geometric accents, three decorative dots on bottom-right, clean editorial layout, premium lighting, peaceful spiritual atmosphere, high-quality blog cover design."
-
-- Image ratio should be optimized for:
-  - Blog featured images
-  - Pinterest pins
-  - Social media previews
-  - Website hero banners
-
-- Preferred aspect ratios:
-  - 16:9 for blog banners
-  - 4:5 for Pinterest/social sharing
+Image Prompt: [your image prompt in one paragraph]
 
 SEO REQUIREMENTS:
-Naturally include the main keyword and related terms a real person would search. Place keywords in the title, the opening, at least one heading, and naturally through the body. Never stuff keywords. The article should read smoothly first and rank second.
+Include the main keyword naturally in the title, first paragraph, at least one heading, and a couple times in the body. Never force it. The article should read smoothly first and rank second.
 
 STRICTLY FORBIDDEN:
-Do not use any dash characters of any kind to join clauses. Use commas, periods, or rewrite the sentence instead.
+Do not use these words: delve, dive into, navigate, landscape, realm, tapestry, testament, foster, embark, journey, unleash, unlock, harness, leverage, robust, seamless, elevate, empower, game changer, cutting edge, state of the art, in todays world, in the digital age, ever evolving, fast paced world, when it comes to, it is important to note, needless to say, at the end of the day, the bottom line, last but not least, first and foremost, that being said, moreover, furthermore, additionally, in conclusion, to sum up, in summary, ultimately, essentially, arguably, notably, significantly, comprehensive, holistic, pivotal, crucial, vital, the key to, unlock the secrets, look no further, in the realm of, a wide range of, stand out from the crowd.
 
-Do not use these words or phrases anywhere: delve, dive into, navigate, navigating, landscape, realm, tapestry, testament, foster, fostering, embark, journey, unleash, unlock, unlocking, harness, leverage, leveraging, robust, seamless, seamlessly, elevate, elevating, empower, empowering, game changer, game changing, cutting edge, state of the art, in todays world, in the digital age, in this digital era, ever evolving, fast paced world, when it comes to, it is important to note, it is worth noting, needless to say, at the end of the day, the bottom line, last but not least, first and foremost, that being said, moreover, furthermore, additionally, in conclusion, to sum up, in summary, ultimately, essentially, basically, arguably, notably, significantly, comprehensive, holistic, myriad, plethora, paramount, pivotal, crucial role, vital role, plays a key role, the key to, unlock the secrets, take it to the next level, look no further, whether you are a beginner or, in the realm of, a wide range of, a variety of, stand out from the crowd, the world of.
-
-Do not write robotic transitions. Do not start sentences with the same word repeatedly. Do not use overly formal connectors. Do not pad sentences with filler. Do not write the phrase "in todays fast paced world" or anything similar.
-
-TONE CHECK:
-Before finishing, reread the article. If any sentence sounds like marketing copy or like an AI wrote it, rewrite that sentence in plain human language. The final article must read like a real person who knows the topic wrote it in one focused sitting.
+Do not use dashes to join clauses. Do not write robotic sentences. Do not sound like AI marketing copy.
 
 OUTPUT FORMAT:
 Return the title on the first line.

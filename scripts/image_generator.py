@@ -56,9 +56,24 @@ def _stars(draw: ImageDraw, w: int, h: int, color: tuple, alpha: int = 100):
         draw.regular_polygon((x, y, s), 4, rotation=30, fill=(*color, alpha))
 
 
+def _pick_theme(prompt: str) -> dict:
+    p = prompt.lower()
+    if any(w in p for w in ["quran", "surah", "ayat", "book", "read", "recite", "learn"]):
+        return {"bg1": (62, 39, 35), "bg2": (106, 73, 65), "accent": (212, 175, 55)}
+    if any(w in p for w in ["pray", "fajr", "namaz", "salah", "wudu", "mosque", "dua"]):
+        return {"bg1": (13, 52, 89), "bg2": (33, 97, 143), "accent": (255, 193, 7)}
+    if any(w in p for w in ["hajj", "umrah", "kaaba", "mecca", "pilgrim"]):
+        return {"bg1": (27, 27, 27), "bg2": (50, 50, 50), "accent": (255, 215, 0)}
+    if any(w in p for w in ["fast", "ramadan", "iftar", "suhoor"]):
+        return {"bg1": (26, 67, 53), "bg2": (46, 125, 96), "accent": (212, 175, 55)}
+    if any(w in p for w in ["nature", "garden", "water", "sky", "peace", "calm"]):
+        return {"bg1": (1, 87, 106), "bg2": (0, 131, 143), "accent": (255, 235, 59)}
+    return random.choice(COLOR_THEMES)
+
+
 def generate_image(prompt: str, output_path: str, alt_text: str = "") -> str:
     w, h = 1200, 630
-    theme = random.choice(COLOR_THEMES)
+    theme = _pick_theme(prompt)
 
     img = Image.new("RGBA", (w, h))
     draw = ImageDraw.Draw(img)
