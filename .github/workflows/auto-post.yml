@@ -1,0 +1,41 @@
+name: Auto Post to Blogger
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-and-post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate and post article
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+          BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+          BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+          BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
+        run: python scripts/main.py
+
+      - name: Commit state changes
+        run: |
+          git config --local user.email "auto-poster@bot.com"
+          git config --local user.name "Auto Poster"
+          git add config.json posted_log.json
+          git diff --staged --quiet || git commit -m "auto: update posting state [skip ci]"
+          git push
