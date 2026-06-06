@@ -65,16 +65,19 @@ def create_post(
 
 
 def post_article_with_images(
-    title: str, body: str, image_paths: list, alt_texts: list = None
+    title: str, body: str, image_paths: list, alt_texts: list = None, labels: list = None
 ) -> dict:
     service = get_blogger_service()
     blog_id = os.environ.get("BLOGGER_BLOG_ID")
+
+    if labels is None:
+        labels = ["Islamic Guide"]
 
     post_body = {
         "kind": "blogger#post",
         "title": title,
         "content": body,
-        "labels": ["Islamic Guide", "Hajj", "Umrah", "Ramadan"],
+        "labels": labels,
     }
 
     created_post = (
@@ -112,7 +115,7 @@ def post_article_with_images(
                 "kind": "blogger#post",
                 "title": title,
                 "content": full_content,
-                "labels": ["Islamic Guide", "Hajj", "Umrah", "Ramadan"],
+                "labels": labels,
             },
             isDraft=False,
         )

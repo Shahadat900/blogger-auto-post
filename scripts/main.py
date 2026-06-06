@@ -69,8 +69,16 @@ def main():
     if current_index >= len(subtopics):
         current_index = 0
 
-    subtopic = subtopics[current_index]
+    entry = subtopics[current_index]
+    if isinstance(entry, dict):
+        subtopic = entry["topic"]
+        category = entry.get("category", "Islam")
+    else:
+        subtopic = entry
+        category = "Islam"
+
     print(f"\nTopic #{current_index + 1}: {subtopic}")
+    print(f"Category: {category}")
 
     posted_key = subtopic.lower().strip()
     if posted_key in posted_log:
@@ -128,7 +136,8 @@ def main():
 
     from scripts.post_to_blogger import post_article_with_images
 
-    result = post_article_with_images(title, body_html, image_paths, alt_texts)
+    labels = ["Islamic Guide", category]
+    result = post_article_with_images(title, body_html, image_paths, alt_texts, labels=labels)
 
     post_id = result.get("post_id", "")
     post_url = result.get("post_url", "")
@@ -141,6 +150,7 @@ def main():
     posted_log[posted_key] = {
         "title": title,
         "subtopic": subtopic,
+        "category": category,
         "post_id": post_id,
         "url": post_url,
         "date": published or datetime.now().isoformat(),
