@@ -1,7 +1,9 @@
 import os
 import io
+import json
 import base64
-import google.generativeai as genai
+from pathlib import Path
+import requests
 from PIL import Image
 
 
@@ -10,9 +12,11 @@ def generate_image(prompt: str, output_path: str, alt_text: str = "") -> str:
     if not api_key:
         raise ValueError("GEMINI_API_KEY environment variable not set")
 
-    genai.configure(api_key=api_key)
-
-    model = genai.GenerativeModel("gemini-2.0-flash-exp-image-generation")
+    model = "gemini-2.0-flash-exp-image-generation"
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{model}:generateContent?key={api_key}"
+    )
 
     full_prompt = (
         f"Generate a realistic, high-quality blog featured image. "
@@ -22,21 +26,33 @@ def generate_image(prompt: str, output_path: str, alt_text: str = "") -> str:
         f"{prompt}"
     )
 
-    response = model.generate_content(
-        full_prompt,
-        generation_config={"response_modalities": ["Text", "Image"]},
-    )
+    payload = {
+        "contents": [{"parts": [{"text": full_prompt}]}],
+        "generationConfig": {
+            "responseModalities": ["Text", "Image"],
+            "temperature": 0.4,
+        },
+    }
+
+    resp = requests.post(url, json=payload, timeout=120)
+    resp.raise_for_status()
+    data = resp.json()
 
     image_data = None
-    for part in response._result.candidates[0].content.parts:
-        if hasattr(part, "inline_data") and part.inline_data:
-            image_data = part.inline_data.data
-            break
+    try:
+        parts = data["candidates"][0]["content"]["parts"]
+        for part in parts:
+            if "inlineData" in part:
+                image_data = base64.b64decode(part["inlineData"]["data"])
+                break
+    except (KeyError, IndexError) as e:
+        raise RuntimeError(
+            f"Gemini image API error: {json.dumps(data, indent=2)[:500]}"
+        ) from e
 
     if not image_data:
-        text_response = response.text if hasattr(response, "text") else ""
         raise RuntimeError(
-            f"No image data in Gemini response. Response: {text_response[:200]}"
+            "No image data in Gemini response. The model may not support image generation."
         )
 
     img = Image.open(io.BytesIO(image_data))

@@ -1,9 +1,10 @@
 import os
 import re
 import sys
+import json
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-import google.generativeai as genai
+import requests
 
 PROMPT_TEMPLATE_PATH = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
@@ -17,23 +18,43 @@ def read_prompt_template() -> str:
         return f.read()
 
 
-def generate_article(subtopic: str) -> dict:
+def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY environment variable not set")
 
-    genai.configure(api_key=api_key)
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{model}:generateContent?key={api_key}"
+    )
 
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": 8192,
+        },
+    }
+
+    resp = requests.post(url, json=payload, timeout=120)
+    resp.raise_for_status()
+    data = resp.json()
+
+    try:
+        text = data["candidates"][0]["content"]["parts"][0]["text"]
+    except (KeyError, IndexError) as e:
+        raise RuntimeError(
+            f"Gemini API error: {json.dumps(data, indent=2)[:500]}"
+        ) from e
+
+    return text.strip()
+
+
+def generate_article(subtopic: str) -> dict:
     template = read_prompt_template()
     prompt = template.replace("{subtopic}", subtopic)
 
-    model = genai.GenerativeModel("gemini-2.0-flash")
-    response = model.generate_content(prompt)
-
-    if not response.text:
-        raise RuntimeError("Gemini returned empty response")
-
-    raw = response.text.strip()
+    raw = _gemini_text(prompt)
 
     lines = raw.split("\n")
     title = lines[0].strip().strip("#").strip()
