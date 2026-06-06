@@ -1,13 +1,16 @@
 import os
-import json
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 SCOPES = ["https://www.googleapis.com/auth/blogger"]
 
 
 def get_credentials():
+    from google.oauth2.credentials import Credentials
+    from google.auth.transport.requests import Request
+
     client_id = os.environ.get("BLOGGER_CLIENT_ID")
     client_secret = os.environ.get("BLOGGER_CLIENT_SECRET")
     refresh_token = os.environ.get("BLOGGER_REFRESH_TOKEN")
@@ -42,6 +45,8 @@ def get_credentials():
 
 
 def get_blogger_service():
+    from googleapiclient.discovery import build
+
     creds = get_credentials()
     service = build("blogger", "v3", credentials=creds)
     return service
