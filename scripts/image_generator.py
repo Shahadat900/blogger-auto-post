@@ -2,6 +2,7 @@ import os
 import io
 import json
 import base64
+import time
 from pathlib import Path
 import requests
 from PIL import Image
@@ -34,9 +35,20 @@ def generate_image(prompt: str, output_path: str, alt_text: str = "") -> str:
         },
     }
 
-    resp = requests.post(url, json=payload, timeout=120)
-    resp.raise_for_status()
-    data = resp.json()
+    for attempt in range(3):
+        resp = requests.post(url, json=payload, timeout=120)
+        if resp.status_code == 429:
+            wait = 15 * (attempt + 1)
+            print(f"  Image generation rate limited. Waiting {wait}s...")
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+        data = resp.json()
+        break
+    else:
+        raise RuntimeError("Image generation rate limit exceeded after 3 retries.")
+
+
 
     image_data = None
     try:

@@ -2,9 +2,11 @@ import os
 import re
 import sys
 import json
+import time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import requests
+
 
 PROMPT_TEMPLATE_PATH = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
@@ -36,9 +38,21 @@ def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
         },
     }
 
-    resp = requests.post(url, json=payload, timeout=120)
-    resp.raise_for_status()
-    data = resp.json()
+    for attempt in range(3):
+        resp = requests.post(url, json=payload, timeout=120)
+        if resp.status_code == 429:
+            wait = 10 * (attempt + 1)
+            print(f"  Rate limited. Waiting {wait}s... (attempt {attempt+1}/3)")
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+        data = resp.json()
+        break
+    else:
+        raise RuntimeError(
+            f"Gemini API rate limit exceeded after 3 retries. "
+            f"Your key may have run out of quota."
+        )
 
     try:
         text = data["candidates"][0]["content"]["parts"][0]["text"]
@@ -48,7 +62,6 @@ def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
         ) from e
 
     return text.strip()
-
 
 def generate_article(subtopic: str) -> dict:
     template = read_prompt_template()
