@@ -12,6 +12,15 @@ CONFIG_PATH = PROJECT_ROOT / "config.json"
 POSTED_LOG_PATH = PROJECT_ROOT / "posted_log.json"
 TEMP_IMAGES_DIR = PROJECT_ROOT / "temp_images"
 
+env_path = PROJECT_ROOT / ".env"
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
 
 def load_json(path: Path) -> dict:
     if path.exists():
