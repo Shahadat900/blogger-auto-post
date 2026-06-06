@@ -1,5 +1,8 @@
 import os
 import re
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import google.generativeai as genai
 
 PROMPT_TEMPLATE_PATH = os.path.join(

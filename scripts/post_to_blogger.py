@@ -1,6 +1,8 @@
 import os
 import json
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from googleapiclient.http import MediaFileUpload
 
 from scripts.auth_helper import get_blogger_service
