@@ -25,10 +25,11 @@ def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
     if not api_key:
         raise ValueError("GEMINI_API_KEY environment variable not set")
 
-    url = (
-        f"https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{model}:generateContent?key={api_key}"
+    api_endpoint = os.environ.get(
+        "GEMINI_API_ENDPOINT",
+        "https://generativelanguage.googleapis.com/v1beta",
     )
+    url = f"{api_endpoint}/models/{model}:generateContent?key={api_key}"
 
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -38,20 +39,25 @@ def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
         },
     }
 
-    for attempt in range(3):
+    max_retries = 10
+    for attempt in range(max_retries):
         resp = requests.post(url, json=payload, timeout=120)
         if resp.status_code == 429:
-            wait = 10 * (attempt + 1)
-            print(f"  Rate limited. Waiting {wait}s... (attempt {attempt+1}/3)")
+            wait = min(5 * (2 ** attempt), 120)
+            print(f"  Rate limited. Waiting {wait}s... (attempt {attempt+1}/{max_retries})")
             time.sleep(wait)
             continue
+        if resp.status_code == 403:
+            print("  API key invalid or forbidden. Check your key at https://aistudio.google.com/app/apikey")
+            raise RuntimeError("Gemini API key invalid (403 Forbidden)")
         resp.raise_for_status()
         data = resp.json()
         break
     else:
         raise RuntimeError(
-            f"Gemini API rate limit exceeded after 3 retries. "
-            f"Your key may have run out of quota."
+            f"Gemini API rate limit exceeded after {max_retries} retries. "
+            f"Your key may have run out of free quota. "
+            f"Get a new key at https://aistudio.google.com/app/apikey"
         )
 
     try:

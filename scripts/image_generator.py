@@ -35,18 +35,19 @@ def generate_image(prompt: str, output_path: str, alt_text: str = "") -> str:
         },
     }
 
-    for attempt in range(3):
+    max_retries = 10
+    for attempt in range(max_retries):
         resp = requests.post(url, json=payload, timeout=120)
         if resp.status_code == 429:
-            wait = 15 * (attempt + 1)
-            print(f"  Image generation rate limited. Waiting {wait}s...")
+            wait = min(5 * (2 ** attempt), 120)
+            print(f"  Image rate limited. Waiting {wait}s... (attempt {attempt+1}/{max_retries})")
             time.sleep(wait)
             continue
         resp.raise_for_status()
         data = resp.json()
         break
     else:
-        raise RuntimeError("Image generation rate limit exceeded after 3 retries.")
+        raise RuntimeError(f"Image generation rate limit exceeded after {max_retries} retries.")
 
 
 
