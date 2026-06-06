@@ -1,10 +1,9 @@
 import os
 import json
 import sys
+import base64
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from googleapiclient.http import MediaFileUpload
-
 from scripts.auth_helper import get_blogger_service
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "config.json"
@@ -13,20 +12,10 @@ def _load_config():
         return json.load(f)
 
 
-def upload_image(service, blog_id: str, image_path: str, post_id: str = None) -> str:
-    media = MediaFileUpload(image_path, mimetype="image/png", resumable=True)
-
-    if post_id:
-        request = service.posts().media().insert(
-            blogId=blog_id, postId=post_id, media_body=media
-        )
-    else:
-        request = service.posts().media().insert(
-            blogId=blog_id, media_body=media
-        )
-
-    result = request.execute()
-    return result.get("url", "")
+def image_to_data_uri(image_path: str) -> str:
+    with open(image_path, "rb") as f:
+        data = base64.b64encode(f.read()).decode()
+    return f"data:image/png;base64,{data}"
 
 
 def post_article_with_images(
@@ -52,7 +41,6 @@ def post_article_with_images(
 
     if labels is None:
         labels = ["Islamic Guide"]
-
     if alt_texts is None:
         alt_texts = ["Featured image"] * len(image_paths)
 
@@ -67,21 +55,25 @@ def post_article_with_images(
         service.posts().insert(blogId=blog_id, body=post_body, isDraft=True).execute()
     )
 
-    post_id = created_post.get("id", "")
-
-    image_urls = []
-    for img_path in image_paths:
-        if os.path.exists(img_path):
-            url = upload_image(service, blog_id, img_path, post_id)
-            image_urls.append(url)
-
     images_html = ""
-    for i, url in enumerate(image_urls):
+    for i, img_path in enumerate(image_paths):
         alt = alt_texts[i] if i < len(alt_texts) else "Islamic guide blog image"
+        src = image_to_data_uri(img_path) if os.path.exists(img_path) else ""
+        pos = "" if i > 0 else "position:relative;display:inline-block;max-width:100%;"
+        title_overlay = ""
+        if i == 0:
+            title_overlay = (
+                f'<div style="position:absolute;bottom:20px;left:20px;right:20px;'
+                f'background:linear-gradient(transparent,rgba(0,0,0,.7));'
+                f'padding:30px 20px 15px;border-radius:0 0 8px 8px;">'
+                f'<h1 style="margin:0;color:#fff;font-size:clamp(18px,4vw,36px);'
+                f'text-shadow:1px 1px 4px rgba(0,0,0,.5);">{title}</h1></div>'
+            )
         images_html += (
-            f'<div style="text-align:center;margin-bottom:20px;">'
-            f'<img src="{url}" alt="{alt}" loading="lazy" '
-            f'style="max-width:100%;height:auto;border-radius:8px;" /></div>\n'
+            f'<div style="text-align:center;margin-bottom:20px;{pos}">'
+            f'<img src="{src}" alt="{alt}" loading="lazy" '
+            f'style="max-width:100%;height:auto;border-radius:8px;display:block;" />'
+            f'{title_overlay}</div>\n'
         )
 
     full_html = images_html + body
@@ -90,31 +82,31 @@ def post_article_with_images(
         title=title,
         body_html=full_html,
         body_text=body_text or body,
-        category=category or labels[1] if len(labels) > 1 else "Islam",
+        category=category or (labels[1] if len(labels) > 1 else "Islam"),
         blog_name=blog_name,
         blog_url=blog_url,
         focus_keyword=focus_keyword,
         meta_description=meta_description,
         faq_text=faq_text,
-        image_urls=image_urls,
+        image_urls=image_paths,
         word_count=word_count,
     )
 
-    updated_post = (
-        service.posts()
-        .update(
-            blogId=blog_id,
-            postId=post_id,
-            body={
-                "kind": "blogger#post",
-                "title": title,
-                "content": seo_html,
-                "labels": labels,
-            },
-            isDraft=False,
-        )
-        .execute()
-    )
+    service.posts().update(
+        blogId=blog_id,
+        postId=created_post.get("id", ""),
+        body={
+            "kind": "blogger#post",
+            "title": title,
+            "content": seo_html,
+            "labels": labels,
+        },
+    ).execute()
+
+    updated_post = service.posts().publish(
+        blogId=blog_id,
+        postId=created_post.get("id", ""),
+    ).execute()
 
     return {
         "post_id": updated_post.get("id", ""),

@@ -20,7 +20,13 @@ def read_prompt_template() -> str:
         return f.read()
 
 
-def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
+FALLBACK_MODELS = [
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash",
+]
+
+
+def _gemini_text(prompt: str, model: str = "") -> str:
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY environment variable not set")
@@ -29,7 +35,8 @@ def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
         "GEMINI_API_ENDPOINT",
         "https://generativelanguage.googleapis.com/v1beta",
     )
-    url = f"{api_endpoint}/models/{model}:generateContent?key={api_key}"
+
+    models_to_try = [model] if model else FALLBACK_MODELS[:]
 
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -39,35 +46,59 @@ def _gemini_text(prompt: str, model: str = "gemini-2.0-flash") -> str:
         },
     }
 
-    max_retries = 10
-    for attempt in range(max_retries):
-        resp = requests.post(url, json=payload, timeout=120)
-        if resp.status_code == 429:
-            wait = min(5 * (2 ** attempt), 120)
-            print(f"  Rate limited. Waiting {wait}s... (attempt {attempt+1}/{max_retries})")
-            time.sleep(wait)
-            continue
-        if resp.status_code == 403:
-            print("  API key invalid or forbidden. Check your key at https://aistudio.google.com/app/apikey")
-            raise RuntimeError("Gemini API key invalid (403 Forbidden)")
-        resp.raise_for_status()
-        data = resp.json()
-        break
-    else:
-        raise RuntimeError(
-            f"Gemini API rate limit exceeded after {max_retries} retries. "
-            f"Your key may have run out of free quota. "
-            f"Get a new key at https://aistudio.google.com/app/apikey"
-        )
+    last_error = None
+    for m in models_to_try:
+        url = f"{api_endpoint}/models/{m}:generateContent?key={api_key}"
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                resp = requests.post(url, json=payload, timeout=180)
+            except requests.Timeout:
+                wait = min(10 * (2 ** attempt), 120)
+                print(f"  Timeout on {m}. Retrying in {wait}s... (attempt {attempt+1}/{max_retries})")
+                time.sleep(wait)
+                continue
+            except requests.ConnectionError as e:
+                wait = min(10 * (2 ** attempt), 120)
+                print(f"  Connection error on {m}. Retrying in {wait}s...")
+                time.sleep(wait)
+                continue
 
-    try:
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
-    except (KeyError, IndexError) as e:
-        raise RuntimeError(
-            f"Gemini API error: {json.dumps(data, indent=2)[:500]}"
-        ) from e
+            if resp.status_code == 429:
+                wait = min(5 * (2 ** attempt), 120)
+                print(f"  Rate limited on {m}. Waiting {wait}s... (attempt {attempt+1}/{max_retries})")
+                time.sleep(wait)
+                continue
+            if resp.status_code in (503, 500):
+                if attempt < max_retries - 1:
+                    wait = min(10 * (2 ** attempt), 60)
+                    print(f"  {m} returned {resp.status_code}. Retrying in {wait}s... (attempt {attempt+1}/{max_retries})")
+                    time.sleep(wait)
+                    continue
+                print(f"  {m} failed after {max_retries} retries. Trying next model...")
+                last_error = f"Model {m} unavailable (503)"
+                break
+            if resp.status_code == 403:
+                print("  API key invalid or forbidden. Check your key at https://aistudio.google.com/app/apikey")
+                raise RuntimeError("Gemini API key invalid (403 Forbidden)")
+            resp.raise_for_status()
+            data = resp.json()
+            try:
+                text = data["candidates"][0]["content"]["parts"][0]["text"]
+                return text.strip()
+            except (KeyError, IndexError):
+                raise RuntimeError(
+                    f"Gemini API error: {json.dumps(data, indent=2)[:500]}"
+                )
+        else:
+            if not last_error:
+                last_error = f"Model {m} rate limited after {max_retries} retries"
 
-    return text.strip()
+    raise RuntimeError(
+        f"Gemini API failed. {last_error}. "
+        f"All models exhausted. "
+        f"Get a new key at https://aistudio.google.com/app/apikey"
+    )
 
 def generate_article(subtopic: str) -> dict:
     template = read_prompt_template()
