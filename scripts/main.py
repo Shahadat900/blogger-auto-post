@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import shutil
 from datetime import datetime
 from pathlib import Path
 
@@ -10,7 +9,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 CONFIG_PATH = PROJECT_ROOT / "config.json"
 POSTED_LOG_PATH = PROJECT_ROOT / "posted_log.json"
-TEMP_IMAGES_DIR = PROJECT_ROOT / "temp_images"
 
 env_path = PROJECT_ROOT / ".env"
 if env_path.exists():
@@ -56,8 +54,7 @@ def body_to_html(body: str) -> str:
     return "\n".join(html_parts)
 
 
-def generate_alt_text_for(subtopic: str, index: int = 1) -> str:
-    return f"Islamic guide blog post image about {subtopic}"
+
 
 
 def main():
@@ -99,31 +96,21 @@ def main():
         sys.exit(0)
 
     from scripts.gemini_writer import generate_article
-    from scripts.image_generator import generate_and_save
 
     print("\n[1/4] Generating article with Gemini...")
     article = generate_article(subtopic)
 
     title = article["title"]
     body = article["body"]
-    image_prompt = article["image_prompt"]
-    alt_text = article.get("alt_text", "") or generate_alt_text_for(subtopic)
     word_count = article["word_count"]
 
     print(f"  Title: {title}")
     print(f"  Words: {word_count}")
 
-    print(f"\n[2/4] Generating featured image...")
-
-    os.makedirs(TEMP_IMAGES_DIR, exist_ok=True)
+    print(f"\n[2/4] Skipping images...")
 
     image_paths = []
     alt_texts = []
-
-    path1, alt1 = generate_and_save(image_prompt, alt_text, index=1)
-    image_paths.append(path1)
-    alt_texts.append(alt1)
-    print(f"  Featured image saved: {path1}")
 
     print("\n[3/4] Posting to Blogger with SEO...")
     body_html = body_to_html(body)
@@ -161,13 +148,10 @@ def main():
         "url": post_url,
         "date": published or datetime.now().isoformat(),
         "word_count": word_count,
-        "images": len(image_paths),
     }
     save_json(POSTED_LOG_PATH, posted_log)
 
-    if TEMP_IMAGES_DIR.exists():
-        shutil.rmtree(TEMP_IMAGES_DIR)
-        print("  Temp images cleaned up")
+
 
     current_index = (current_index + 1) % len(subtopics)
     config["current_index"] = current_index

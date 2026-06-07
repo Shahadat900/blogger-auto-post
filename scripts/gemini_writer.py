@@ -111,28 +111,12 @@ def generate_article(subtopic: str) -> dict:
 
     seo_marker = "----------------------------"
     seo_section_marker = "SEO METADATA"
-    image_prompt_marker = "Image Prompt:"
 
     seo_start = raw.find(seo_section_marker)
-
-    image_prompt_start = raw.find(image_prompt_marker)
-    if image_prompt_start != -1:
-        body = raw[len(lines[0]) : image_prompt_start].strip()
-    elif seo_start != -1:
+    if seo_start != -1:
         body = raw[len(lines[0]) : seo_start].strip()
     else:
         body = raw[len(lines[0]) :].strip()
-
-    image_prompt = ""
-    alt_text = ""
-
-    if image_prompt_start != -1:
-        prompt_text = raw[image_prompt_start + len(image_prompt_marker):]
-        next_sep = prompt_text.find(seo_marker)
-        if next_sep != -1:
-            image_prompt = prompt_text[:next_sep].strip()
-        else:
-            image_prompt = prompt_text.strip()
 
     word_count = len(body.split())
 
@@ -141,9 +125,7 @@ def generate_article(subtopic: str) -> dict:
     slug = ""
     faq = ""
 
-    seo_section = ""
-    if seo_start != -1:
-        seo_section = raw[seo_start:]
+    seo_section = raw[seo_start:] if seo_start != -1 else ""
 
     kw_match = re.search(r"FOCUS KEYWORD:\s*(.+)", seo_section)
     if kw_match:
@@ -161,22 +143,9 @@ def generate_article(subtopic: str) -> dict:
     if faq_match:
         faq = faq_match.group(1).strip()
 
-    if not image_prompt:
-        image_prompt = (
-            f"Modern Islamic blog featured image about {subtopic}, "
-            f"elegant green and gold gradient background, minimalist luxury design, "
-            f"soft abstract layered shapes, clean editorial layout, "
-            f"premium lighting, peaceful spiritual atmosphere, high-quality blog cover design"
-        )
-
-    if not alt_text:
-        alt_text = f"Islamic guide blog post about {subtopic}"
-
     return {
         "title": title,
         "body": body,
-        "image_prompt": image_prompt,
-        "alt_text": alt_text,
         "focus_keyword": focus_keyword,
         "meta_description": meta_description,
         "slug": slug,

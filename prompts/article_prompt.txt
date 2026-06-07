@@ -20,15 +20,6 @@ STRUCTURE:
 - End with a short, encouraging closing that leaves the reader with something to act on.
 - Do not write a long summary that repeats everything.
 
-IMAGE PROMPT RULES:
-- The image prompt must describe a realistic photo scene related to the topic.
-- No text overlays, watermarks, logos, captions, or typography inside the image.
-- Use natural lighting and realistic details.
-- Write the image prompt as a single paragraph describing a beautiful, natural scene.
-- After the full article, add this line exactly:
-----------------------------
-Image Prompt: [your image prompt in one paragraph]
-
 SEO REQUIREMENTS:
 Include the main keyword naturally in the title, first paragraph, at least one heading, and a couple times in the body. Never force it. The article should read smoothly first and rank second.
 
@@ -40,7 +31,8 @@ Do not use dashes to join clauses. Do not write robotic sentences. Do not sound 
 OUTPUT FORMAT:
 Return the title on the first line.
 Then the full article body below it.
-Then add this SEO section at the end:
+Then add this line and SEO section at the end:
+----------------------------
 
 ----------------------------
 SEO METADATA

@@ -1,21 +1,16 @@
 import os
 import json
 import sys
-import base64
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.auth_helper import get_blogger_service
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "config.json"
+
+
 def _load_config():
     with open(CONFIG_PATH) as f:
         return json.load(f)
-
-
-def image_to_data_uri(image_path: str) -> str:
-    with open(image_path, "rb") as f:
-        data = base64.b64encode(f.read()).decode()
-    return f"data:image/png;base64,{data}"
 
 
 def post_article_with_images(
@@ -58,22 +53,10 @@ def post_article_with_images(
     images_html = ""
     for i, img_path in enumerate(image_paths):
         alt = alt_texts[i] if i < len(alt_texts) else "Islamic guide blog image"
-        src = image_to_data_uri(img_path) if os.path.exists(img_path) else ""
-        pos = "" if i > 0 else "position:relative;display:inline-block;max-width:100%;"
-        title_overlay = ""
-        if i == 0:
-            title_overlay = (
-                f'<div style="position:absolute;bottom:20px;left:20px;right:20px;'
-                f'background:linear-gradient(transparent,rgba(0,0,0,.7));'
-                f'padding:30px 20px 15px;border-radius:0 0 8px 8px;">'
-                f'<h1 style="margin:0;color:#fff;font-size:clamp(18px,4vw,36px);'
-                f'text-shadow:1px 1px 4px rgba(0,0,0,.5);">{title}</h1></div>'
-            )
         images_html += (
-            f'<div style="text-align:center;margin-bottom:20px;{pos}">'
-            f'<img src="{src}" alt="{alt}" loading="lazy" '
-            f'style="max-width:100%;height:auto;border-radius:8px;display:block;" />'
-            f'{title_overlay}</div>\n'
+            f'<div style="text-align:center;margin-bottom:20px;">'
+            f'<img src="{img_path}" alt="{alt}" loading="lazy" '
+            f'style="max-width:100%;height:auto;border-radius:8px;" /></div>\n'
         )
 
     full_html = images_html + body

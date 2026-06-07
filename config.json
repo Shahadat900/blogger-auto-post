@@ -1,6 +1,6 @@
 {
   "blog_name": "Islamic Guide",
-  "blog_url": "https://quranflow.blogspot.com",
+  "blog_url": "https://quranflow.blogspot.com/",
   "blog_id": "2464585496297484009",
   "api_key": "AIzaSyBVFy_g_nAv6vFly8PyK6_FFMDs13MznVM",
   "niche": "Islamic Guide",
@@ -15,41 +15,126 @@
     "Hajj & Umrah"
   ],
   "subtopics": [
-    {"topic": "How to pray Fajr on time every day", "category": "Namaz"},
-    {"topic": "Step by step guide to performing Wudu correctly", "category": "Namaz"},
-    {"topic": "Benefits of praying Tahajjud in the last third of the night", "category": "Namaz"},
-    {"topic": "Common mistakes people make during Salah", "category": "Namaz"},
-    {"topic": "How to concentrate fully in your prayers", "category": "Namaz"},
-
-    {"topic": "Powerful Islamic quotes about patience and perseverance", "category": "Islamic Quotes"},
-    {"topic": "Beautiful sayings of Prophet Muhammad about kindness", "category": "Islamic Quotes"},
-    {"topic": "Inspiring Quranic verses about hope and mercy", "category": "Islamic Quotes"},
-    {"topic": "Islamic quotes about the importance of knowledge", "category": "Islamic Quotes"},
-    {"topic": "Wisdom from Islamic scholars on daily life", "category": "Islamic Quotes"},
-
-    {"topic": "Best Surahs to read for daily protection", "category": "Quran"},
-    {"topic": "How to build a consistent Quran reading habit", "category": "Quran"},
-    {"topic": "Simple tips to memorize Quran verses easily", "category": "Quran"},
-    {"topic": "Understanding the meaning of Surah Al Fatihah", "category": "Quran"},
-    {"topic": "Benefits of reading Quran with translation", "category": "Quran"},
-
-    {"topic": "Five pillars of Islam explained simply", "category": "Islam"},
-    {"topic": "How to strengthen your iman in difficult times", "category": "Islam"},
-    {"topic": "The importance of good character in Islam", "category": "Islam"},
-    {"topic": "Understanding the concept of Tawakkul trust in Allah", "category": "Islam"},
-    {"topic": "How to give sincere repentance Tawbah", "category": "Islam"},
-
-    {"topic": "Morning routine of a practicing Muslim", "category": "Islamic Lifestyle"},
-    {"topic": "Islamic etiquette for eating and drinking", "category": "Islamic Lifestyle"},
-    {"topic": "How to dress modestly and stylishly", "category": "Islamic Lifestyle"},
-    {"topic": "Sunnah practices to incorporate into your daily life", "category": "Islamic Lifestyle"},
-    {"topic": "Balancing work life and worship as a Muslim", "category": "Islamic Lifestyle"},
-
-    {"topic": "What to pack for Umrah a complete checklist", "category": "Hajj & Umrah"},
-    {"topic": "Best duas to read during tawaf and sai", "category": "Hajj & Umrah"},
-    {"topic": "Common mistakes first time Umrah pilgrims make", "category": "Hajj & Umrah"},
-    {"topic": "Umrah on a budget tips and tricks", "category": "Hajj & Umrah"},
-    {"topic": "Step by step guide to performing Umrah", "category": "Hajj & Umrah"}
+    {
+      "topic": "How to pray Fajr on time every day",
+      "category": "Namaz"
+    },
+    {
+      "topic": "Step by step guide to performing Wudu correctly",
+      "category": "Namaz"
+    },
+    {
+      "topic": "Benefits of praying Tahajjud in the last third of the night",
+      "category": "Namaz"
+    },
+    {
+      "topic": "Common mistakes people make during Salah",
+      "category": "Namaz"
+    },
+    {
+      "topic": "How to concentrate fully in your prayers",
+      "category": "Namaz"
+    },
+    {
+      "topic": "Powerful Islamic quotes about patience and perseverance",
+      "category": "Islamic Quotes"
+    },
+    {
+      "topic": "Beautiful sayings of Prophet Muhammad about kindness",
+      "category": "Islamic Quotes"
+    },
+    {
+      "topic": "Inspiring Quranic verses about hope and mercy",
+      "category": "Islamic Quotes"
+    },
+    {
+      "topic": "Islamic quotes about the importance of knowledge",
+      "category": "Islamic Quotes"
+    },
+    {
+      "topic": "Wisdom from Islamic scholars on daily life",
+      "category": "Islamic Quotes"
+    },
+    {
+      "topic": "Best Surahs to read for daily protection",
+      "category": "Quran"
+    },
+    {
+      "topic": "How to build a consistent Quran reading habit",
+      "category": "Quran"
+    },
+    {
+      "topic": "Simple tips to memorize Quran verses easily",
+      "category": "Quran"
+    },
+    {
+      "topic": "Understanding the meaning of Surah Al Fatihah",
+      "category": "Quran"
+    },
+    {
+      "topic": "Benefits of reading Quran with translation",
+      "category": "Quran"
+    },
+    {
+      "topic": "Five pillars of Islam explained simply",
+      "category": "Islam"
+    },
+    {
+      "topic": "How to strengthen your iman in difficult times",
+      "category": "Islam"
+    },
+    {
+      "topic": "The importance of good character in Islam",
+      "category": "Islam"
+    },
+    {
+      "topic": "Understanding the concept of Tawakkul trust in Allah",
+      "category": "Islam"
+    },
+    {
+      "topic": "How to give sincere repentance Tawbah",
+      "category": "Islam"
+    },
+    {
+      "topic": "Morning routine of a practicing Muslim",
+      "category": "Islamic Lifestyle"
+    },
+    {
+      "topic": "Islamic etiquette for eating and drinking",
+      "category": "Islamic Lifestyle"
+    },
+    {
+      "topic": "How to dress modestly and stylishly",
+      "category": "Islamic Lifestyle"
+    },
+    {
+      "topic": "Sunnah practices to incorporate into your daily life",
+      "category": "Islamic Lifestyle"
+    },
+    {
+      "topic": "Balancing work life and worship as a Muslim",
+      "category": "Islamic Lifestyle"
+    },
+    {
+      "topic": "What to pack for Umrah a complete checklist",
+      "category": "Hajj & Umrah"
+    },
+    {
+      "topic": "Best duas to read during tawaf and sai",
+      "category": "Hajj & Umrah"
+    },
+    {
+      "topic": "Common mistakes first time Umrah pilgrims make",
+      "category": "Hajj & Umrah"
+    },
+    {
+      "topic": "Umrah on a budget tips and tricks",
+      "category": "Hajj & Umrah"
+    },
+    {
+      "topic": "Step by step guide to performing Umrah",
+      "category": "Hajj & Umrah"
+    }
   ],
-  "current_index": 0
+  "current_index": 7
 }
